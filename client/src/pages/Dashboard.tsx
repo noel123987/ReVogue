@@ -121,10 +121,9 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.username}!</h1>
-            <p className="text-neutral-dark mb-6">
+            <p className="text-neutral-dark">
               Explore our latest sustainable fashion collections
             </p>
-            <Carousel />
           </div>
 
           <div className="space-y-12">
