@@ -12,7 +12,8 @@ import Dashboard from "@/pages/Dashboard";
 import Sustainability from "@/pages/Sustainability";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
-import Auth from "@/pages/Auth";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import NotFound from "@/pages/not-found";
 
 // Import constants
@@ -29,8 +30,8 @@ function Router() {
       <Route path={ROUTES.SUSTAINABILITY} component={Sustainability} />
       <Route path={ROUTES.ABOUT} component={About} />
       <Route path={ROUTES.CONTACT} component={Contact} />
-      <Route path={ROUTES.LOGIN} component={Auth} />
-      <Route path={ROUTES.REGISTER} component={Auth} />
+      <Route path={ROUTES.LOGIN} component={Login} />
+      <Route path={ROUTES.REGISTER} component={Register} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
