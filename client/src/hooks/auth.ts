@@ -23,3 +23,26 @@ export function useAuth() {
     isAuthenticated,
   };
 }
+import { useQuery } from "@tanstack/react-query";
+import { User } from "@/lib/types";
+
+export function useAuth() {
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const response = await fetch("/api/auth/me");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user");
+      }
+      return response.json();
+    },
+  });
+
+  const isAuthenticated = Boolean(user);
+
+  return {
+    user,
+    isLoading,
+    isAuthenticated,
+  };
+}
