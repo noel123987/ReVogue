@@ -1,98 +1,14 @@
-import { useState } from "react";
+
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
+import { User, Product } from "@/shared/schema";
+import { API_ENDPOINTS } from "@/lib/constants";
+import { TrendingUp, Recycle, Clock, ShoppingBag } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { API_ENDPOINTS } from "@/lib/constants";
-import { User, Product } from "@/lib/types";
-import { formatPrice, getOptimizedImageUrl } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
-import { ButtonLink } from "@/components/ui/button-link";
-import { useToast } from "@/hooks/use-toast";
-import {
-  ShoppingBag,
-  TrendingUp,
-  Recycle,
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "lucide-react";
-
-
-const ProductCarousel = ({ products, title, icon: Icon }: {
-  products: Product[],
-  title: string,
-  icon: any
-}) => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  const scroll = (direction: "left" | "right") => {
-    const container = document.getElementById(`carousel-${title}`);
-    if (container) {
-      const scrollAmount = 300;
-      const newPosition = direction === "left"
-        ? scrollPosition - scrollAmount
-        : scrollPosition + scrollAmount;
-
-      container.scrollTo({
-        left: newPosition,
-        behavior: "smooth"
-      });
-      setScrollPosition(newPosition);
-    }
-  };
-
-  return (
-    <div className="relative">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon className="h-5 w-5 text-primary" />
-        <h2 className="text-xl font-semibold">{title}</h2>
-      </div>
-
-      <div className="relative group">
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-
-        <div
-          id={`carousel-${title}`}
-          className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth"
-        >
-          {products.map(product => (
-            <Card key={product.id} className="min-w-[250px] flex-shrink-0">
-              <div className="relative h-40">
-                <img
-                  src={getOptimizedImageUrl(product.imageUrl)}
-                  alt={product.name}
-                  className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
-                />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="font-medium mb-1">{product.name}</h3>
-                <p className="text-primary font-semibold">
-                  {formatPrice(product.price)}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
-      </div>
-    </div>
-  );
-};
+import { ButtonLink } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const { data: user } = useQuery<User>({
@@ -114,39 +30,113 @@ const Dashboard = () => {
     enabled: !!user,
   });
 
+  const categoryImages = {
+    thrift: [
+      "/attached_assets/WhatsApp Image 2025-03-15 at 10.22.36_ebe0c1e7_1742018904537.jpg",
+      "/attached_assets/WhatsApp Image 2025-03-15 at 11.02.57_9167f998_1742018981064.jpg"
+    ],
+    rental: [
+      "/attached_assets/WhatsApp Image 2025-03-15 at 10.59.06_1f6f5edb_1742018965667.jpg",
+      "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.25_264987fb_1742018887981.jpg"
+    ],
+    upcycled: [
+      "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.10_849b8fb9_1742018948212.jpg",
+      "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.25_f9f32858_1742019196736.jpg"
+    ]
+  };
+
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-neutral-lightest py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.username}!</h1>
-            <p className="text-neutral-dark mb-6">
-              Explore our latest sustainable fashion collections
+          {/* Welcome Section */}
+          <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
+            <h1 className="text-4xl font-bold mb-4">Welcome back, {user?.username}! 👋</h1>
+            <p className="text-neutral-dark text-lg">
+              Discover sustainable fashion that matches your style. Browse our curated collections below.
             </p>
-            <Carousel />
           </div>
 
-          <div className="space-y-12">
-            <ProductCarousel
-              products={thriftProducts || []}
-              title="Trending Thrift"
-              icon={TrendingUp}
-            />
+          {/* Category Carousels */}
+          <div className="space-y-16">
+            {/* Thrift Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Badge className="bg-primary mb-2">Thrift</Badge>
+                  <h2 className="text-2xl font-bold">Pre-loved Treasures</h2>
+                </div>
+                <Link href="/shop?category=thrift">
+                  <a className="text-primary hover:text-primary-dark font-medium">View All</a>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryImages.thrift.map((img, i) => (
+                  <div key={i} className="relative group overflow-hidden rounded-lg aspect-[3/4]">
+                    <img 
+                      src={img} 
+                      alt="Thrift Fashion"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            <ProductCarousel
-              products={upcycledProducts || []}
-              title="Upcycled Collection"
-              icon={Recycle}
-            />
+            {/* Rental Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Badge className="bg-secondary mb-2">Rental</Badge>
+                  <h2 className="text-2xl font-bold">Luxury for Rent</h2>
+                </div>
+                <Link href="/shop?category=rental">
+                  <a className="text-primary hover:text-primary-dark font-medium">View All</a>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryImages.rental.map((img, i) => (
+                  <div key={i} className="relative group overflow-hidden rounded-lg aspect-[3/4]">
+                    <img 
+                      src={img} 
+                      alt="Rental Fashion"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            <ProductCarousel
-              products={rentalProducts || []}
-              title="Available for Rent"
-              icon={Clock}
-            />
+            {/* Upcycled Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Badge className="bg-accent mb-2">Upcycled</Badge>
+                  <h2 className="text-2xl font-bold">Reimagined Fashion</h2>
+                </div>
+                <Link href="/shop?category=upcycled">
+                  <a className="text-primary hover:text-primary-dark font-medium">View All</a>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryImages.upcycled.map((img, i) => (
+                  <div key={i} className="relative group overflow-hidden rounded-lg aspect-[3/4]">
+                    <img 
+                      src={img} 
+                      alt="Upcycled Fashion"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                ))}
+              </div>
+            </section>
           </div>
 
+          {/* Seller CTA */}
           {user?.role === "seller" && (
             <div className="mt-12">
               <ButtonLink
