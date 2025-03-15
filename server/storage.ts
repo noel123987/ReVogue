@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 import { hash, compare } from "bcrypt";
 import { InsertUser, User, InsertProduct, Product, InsertOrder, Order, InsertOrderItem, OrderItem, InsertWishlist, Wishlist } from "@shared/schema";
@@ -104,7 +105,7 @@ class SupabaseStorage implements IStorage {
         query = query.eq('brand', options.brand);
       }
       if (options.sellerId) {
-        query = query.eq('sellerId', options.sellerId);
+        query = query.eq('seller_id', options.sellerId);
       }
     }
 
@@ -142,7 +143,7 @@ class SupabaseStorage implements IStorage {
   }
 
   async getOrdersByUserId(userId: number): Promise<Order[]> {
-    const { data } = await supabase.from('orders').select().eq('buyerId', userId);
+    const { data } = await supabase.from('orders').select().eq('buyer_id', userId);
     return data || [];
   }
 
@@ -171,7 +172,7 @@ class SupabaseStorage implements IStorage {
 
   // Order item operations
   async getOrderItems(orderId: number): Promise<OrderItem[]> {
-    const { data } = await supabase.from('order_items').select().eq('orderId', orderId);
+    const { data } = await supabase.from('order_items').select().eq('order_id', orderId);
     return data || [];
   }
 
@@ -188,7 +189,7 @@ class SupabaseStorage implements IStorage {
 
   // Wishlist operations
   async getWishlistByUserId(userId: number): Promise<Wishlist[]> {
-    const { data } = await supabase.from('wishlist').select().eq('userId', userId);
+    const { data } = await supabase.from('wishlist').select().eq('user_id', userId);
     return data || [];
   }
 
@@ -210,24 +211,3 @@ class SupabaseStorage implements IStorage {
 }
 
 export const storage = new SupabaseStorage();
-import { db } from './db';
-import { products } from '@shared/schema';
-import type { InsertProduct } from '@shared/schema';
-
-export async function createProduct(productData: InsertProduct) {
-  try {
-    const result = await db.insert(products)
-      .values({
-        ...productData,
-        status: 'pending',
-        approvalStatus: 'pending',
-        createdAt: new Date()
-      })
-      .returning();
-    
-    return result[0];
-  } catch (error) {
-    console.error('Error creating product:', error);
-    throw error;
-  }
-}
