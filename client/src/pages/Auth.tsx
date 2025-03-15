@@ -10,11 +10,9 @@ import { API_ENDPOINTS, ROUTES } from "@/lib/constants";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { ButtonLink } from "@/components/ui/button-link";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,23 +20,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Leaf,
-  User,
-  Mail,
-  Lock,
-  UserPlus,
-  LogIn,
-  ArrowRight,
-  CircleDollarSign,
-  Scissors,
-  ShoppingBag,
-} from "lucide-react";
+import { Leaf, User, Mail, Lock, UserPlus, LogIn } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button-link";
+import { ArrowRight, CircleDollarSign, Scissors, ShoppingBag } from "lucide-react";
 
-// Form validation schemas
+
 const loginSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
@@ -48,7 +37,7 @@ const registerSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  fullName: z.string().optional(),
+  fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
   role: z.enum(["buyer", "seller"], { required_error: "Please select a role" }),
 });
 
@@ -62,7 +51,6 @@ const Auth = () => {
   const isRegisterPage = location === ROUTES.REGISTER;
   const [activeTab, setActiveTab] = useState(isRegisterPage ? "register" : "login");
 
-  // Login form
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -71,7 +59,6 @@ const Auth = () => {
     },
   });
 
-  // Register form
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -83,16 +70,14 @@ const Auth = () => {
     },
   });
 
-  // Login mutation
   const loginMutation = useMutation({
     mutationFn: async (values: LoginFormValues) => {
-      try {
-        const response = await apiRequest("POST", API_ENDPOINTS.AUTH.LOGIN, values);
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw new Error('Login failed');
+      const response = await apiRequest("POST", API_ENDPOINTS.AUTH.LOGIN, values);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Login failed");
       }
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -101,39 +86,37 @@ const Auth = () => {
       });
       navigate(ROUTES.HOME);
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         title: "Login Failed",
-        description: "Invalid username or password. Please try again.",
+        description: error.message || "Invalid username or password",
         variant: "destructive",
       });
     },
   });
 
-  // Register mutation
   const registerMutation = useMutation({
     mutationFn: async (values: RegisterFormValues) => {
-      try {
-        const response = await apiRequest("POST", API_ENDPOINTS.AUTH.REGISTER, values);
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw new Error('Registration failed');
+      const response = await apiRequest("POST", API_ENDPOINTS.AUTH.REGISTER, values);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Registration failed");
       }
+      return response.json();
     },
     onSuccess: () => {
       toast({
         title: "Registration Successful",
-        description: "Welcome to ReVogue! Your account has been created.",
+        description: "Welcome to ReVogue! Please log in with your credentials.",
       });
-      // Log in the user after successful registration
-      const { username, password } = registerForm.getValues();
-      loginMutation.mutate({ username, password });
+      setActiveTab("login");
+      loginForm.reset();
+      registerForm.reset();
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         title: "Registration Failed",
-        description: "Username or email already exists. Please try different credentials.",
+        description: error.message || "Please try different credentials",
         variant: "destructive",
       });
     },
@@ -145,6 +128,12 @@ const Auth = () => {
 
   const onRegisterSubmit = (values: RegisterFormValues) => {
     registerMutation.mutate(values);
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    loginForm.reset();
+    registerForm.reset();
   };
 
   return (
@@ -167,7 +156,7 @@ const Auth = () => {
 
             <Card>
               <CardHeader>
-                <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+                <Tabs value={activeTab} onValueChange={handleTabChange}>
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="login">Login</TabsTrigger>
                     <TabsTrigger value="register">Register</TabsTrigger>
@@ -218,24 +207,13 @@ const Auth = () => {
                             <FormControl>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-3 h-4 w-4 text-neutral-dark" />
-                                <Input
-                                  type="password"
-                                  placeholder="Your password"
-                                  className="pl-10"
-                                  {...field}
-                                />
+                                <Input type="password" placeholder="Your password" className="pl-10" {...field} />
                               </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="text-right">
-                        <a href="#" className="text-sm text-primary hover:text-primary-dark">
-                          Forgot password?
-                        </a>
-                      </div>
 
                       <Button
                         type="submit"
@@ -282,7 +260,7 @@ const Auth = () => {
                             <FormControl>
                               <div className="relative">
                                 <Mail className="absolute left-3 top-3 h-4 w-4 text-neutral-dark" />
-                                <Input placeholder="Your email address" className="pl-10" {...field} />
+                                <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -295,9 +273,9 @@ const Auth = () => {
                         name="fullName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Full Name (Optional)</FormLabel>
+                            <FormLabel>Full Name</FormLabel>
                             <FormControl>
-                              <Input placeholder="Your full name" {...field} />
+                              <Input placeholder="Enter your full name" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -313,17 +291,9 @@ const Auth = () => {
                             <FormControl>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-3 h-4 w-4 text-neutral-dark" />
-                                <Input
-                                  type="password"
-                                  placeholder="Create a password"
-                                  className="pl-10"
-                                  {...field}
-                                />
+                                <Input type="password" placeholder="Create a password" className="pl-10" {...field} />
                               </div>
                             </FormControl>
-                            <FormDescription>
-                              Must be at least 6 characters
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -334,30 +304,24 @@ const Auth = () => {
                         name="role"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>I want to:</FormLabel>
+                            <FormLabel>Account Type</FormLabel>
                             <FormControl>
                               <RadioGroup
                                 onValueChange={field.onChange}
-                                defaultValue={field.value}
-                                className="flex flex-col space-y-1"
+                                value={field.value}
+                                className="flex space-x-4"
                               >
-                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormItem className="flex items-center space-x-2">
                                   <FormControl>
                                     <RadioGroupItem value="buyer" />
                                   </FormControl>
-                                  <FormLabel className="font-normal cursor-pointer flex items-center">
-                                    <ShoppingBag className="mr-2 h-4 w-4 text-secondary" />
-                                    Shop sustainable fashion
-                                  </FormLabel>
+                                  <FormLabel className="font-normal">Buyer</FormLabel>
                                 </FormItem>
-                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormItem className="flex items-center space-x-2">
                                   <FormControl>
                                     <RadioGroupItem value="seller" />
                                   </FormControl>
-                                  <FormLabel className="font-normal cursor-pointer flex items-center">
-                                    <CircleDollarSign className="mr-2 h-4 w-4 text-accent" />
-                                    Sell, rent or upcycle items
-                                  </FormLabel>
+                                  <FormLabel className="font-normal">Seller</FormLabel>
                                 </FormItem>
                               </RadioGroup>
                             </FormControl>
