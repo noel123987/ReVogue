@@ -89,12 +89,13 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
     const now = new Date();
-    const user: User = { ...insertUser, id, createdAt: now };
+    const hashedPassword = await hash(insertUser.password, 10);
+    const user: User = { ...insertUser, password: hashedPassword, id, createdAt: now };
     this.users.set(id, user);
     return user;
   }
   async validatePassword(user: User, password: string): Promise<boolean> {
-    return compare(password, user.password);
+    return await compare(password, user.password);
   }
 
   // Product operations
