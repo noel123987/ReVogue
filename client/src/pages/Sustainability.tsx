@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Users,
   Zap,
+  CheckCircle2,
 } from "lucide-react";
 
 const Sustainability = () => {
