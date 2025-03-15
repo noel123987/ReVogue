@@ -4,8 +4,9 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { ROUTES } from "@/lib/constants";
 import { ShieldCheck, Award, Sparkles, Heart, User, Clock, ArrowRight } from "lucide-react";
 
+import { TEAM_MEMBERS } from "@/lib/team";
+
 const About = () => {
-  // Team members
   const teamMembers = [
     {
       name: "Maya Johnson",
