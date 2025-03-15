@@ -4,7 +4,7 @@ import { formatPrice, formatCO2, getCategoryLabel, getOptimizedImageUrl } from "
 import { ROUTES } from "@/lib/constants";
 import { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequestMethod } from "@/lib/queryClient";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -16,6 +16,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { toast } = useToast();
   
+  // Make sure product is valid before rendering
+  if (!product || !product.id) {
+    return null;
+  }
+  
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -23,10 +28,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
     try {
       if (isFavorite) {
         // Remove from wishlist - actual implementation would need wishlist item id
-        await apiRequest('DELETE', `/api/wishlist/${product.id}`);
+        await apiRequestMethod('DELETE', `/api/wishlist/${product.id}`);
       } else {
         // Add to wishlist
-        await apiRequest('POST', '/api/wishlist', { productId: product.id });
+        await apiRequestMethod('POST', '/api/wishlist', { productId: product.id });
       }
       
       setIsFavorite(!isFavorite);
@@ -37,56 +42,50 @@ const ProductCard = ({ product }: ProductCardProps) => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Please sign in to save items to your wishlist",
+        description: error instanceof Error ? error.message : "Please sign in to add items to your wishlist",
         variant: "destructive",
       });
     }
   };
-  
+
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-      <Link href={ROUTES.PRODUCT_DETAIL(product.id)} className="block">
-          <div className="relative overflow-hidden pb-[125%]">
-            <img 
-              src={getOptimizedImageUrl(product.imageUrl)}
-              alt={product.name} 
-              className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105"
-            />
-            <div className="absolute top-3 right-3 flex flex-col gap-2">
-              <Button 
-                variant="outline"
-                size="icon"
-                className="bg-white rounded-full p-2 shadow-sm hover:bg-neutral-lightest transition-colors"
-                onClick={handleFavoriteClick}
-              >
-                <Heart className={`h-4 w-4 ${isFavorite ? 'fill-accent text-accent' : 'text-neutral-dark'}`} />
-              </Button>
-            </div>
-            <div className="absolute bottom-3 left-3 bg-secondary text-white text-xs font-medium px-2 py-1 rounded">
-              CO₂ saved: {formatCO2(product.sustainabilityImpact)}
-            </div>
+    <div className="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+      <Link href={ROUTES.PRODUCT_DETAIL(product.id)}>
+        <div className="relative aspect-[3/4] overflow-hidden">
+          <img 
+            src={getOptimizedImageUrl(product.imageUrl)} 
+            alt={product.name}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-2 right-2">
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              className="bg-white/80 backdrop-blur-sm hover:bg-white rounded-full w-8 h-8"
+              onClick={handleFavoriteClick}
+            >
+              <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-700'}`} />
+            </Button>
           </div>
-          <div className="p-4">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-medium">{product.name}</h3>
-              <span className="font-semibold">{formatPrice(product.price)}</span>
-            </div>
-            <p className="text-neutral-dark text-sm mb-2">
-              {product.brand} • {product.size || 'One Size'}
-            </p>
-            <div className="flex items-center justify-between">
-              <span className="text-xs bg-neutral-light px-2 py-1 rounded-full">
+          {product.category && (
+            <div className="absolute bottom-2 left-2">
+              <Badge className="bg-primary/80 backdrop-blur-sm text-white text-xs">
                 {getCategoryLabel(product.category)}
-              </span>
-              <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-xs ml-1">4.8 (24)</span>
-              </div>
+              </Badge>
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="font-medium text-gray-900 mb-1 truncate">{product.name}</h3>
+          <div className="flex justify-between items-center">
+            <p className="font-bold text-primary">{formatPrice(product.price)}</p>
+            <div className="flex items-center text-xs text-gray-600">
+              <Leaf className="h-3 w-3 mr-1 text-green-600" />
+              <span>{formatCO2(product.sustainabilityImpact)} CO₂ saved</span>
             </div>
           </div>
-        </Link>
+        </div>
+      </Link>
     </div>
   );
 };

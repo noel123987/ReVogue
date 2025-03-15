@@ -71,18 +71,31 @@ const SellUpload = () => {
 
   // Submit mutation
   const submitMutation = useMutation({
-    mutationFn: (values: SellFormValues) => {
+    mutationFn: async (values: SellFormValues) => {
       // Convert price to cents
       const priceInCents = Math.round(values.price * 100);
       // Convert sustainability impact to grams
       const sustainabilityImpactInGrams = Math.round(values.sustainabilityImpact * 1000);
       
-      return apiRequest("POST", API_ENDPOINTS.PRODUCTS.BASE, {
-        ...values,
+      // Format data according to Supabase table structure
+      const productData = {
+        name: values.name,
+        description: values.description,
         price: priceInCents,
+        imageUrl: values.imageUrl,
+        category: values.category,
+        brand: values.brand,
+        size: values.size,
+        condition: values.condition,
         sustainabilityImpact: sustainabilityImpactInGrams,
-        status: "available"
-      });
+        // We'll get the actual seller ID from the backend using the session
+        status: "available",
+        approvalStatus: "pending"
+      };
+      
+      // Send to API endpoint - the backend will handle the Supabase interaction
+      const response = await apiRequest.post(API_ENDPOINTS.PRODUCTS.BASE, productData);
+      return response.data;
     },
     onSuccess: () => {
       toast({

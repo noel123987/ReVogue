@@ -25,7 +25,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }));
   // Middleware to ensure user is authenticated
   const ensureAuthenticated = (req: Request, res: Response, next: Function) => {
-    if (req.session && req.session.userId) {
+    if (req.session && 'userId' in req.session) {
       return next();
     }
     res.status(401).json({ message: "Unauthorized" });
@@ -98,8 +98,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get current user
-  app.get("/api/auth/me", ensureAuthenticated, async (req, res) => {
+  app.get("/api/auth/me", async (req, res) => {
     try {
+      // If no user is logged in, return null instead of error
+      if (!req.session || !req.session.userId) {
+        return res.status(200).json(null);
+      }
+      
       const userId = req.session.userId as number;
       const user = await storage.getUser(userId);
       
@@ -216,19 +221,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/products", ensureAuthenticated, async (req, res) => {
     try {
       const userId = req.session.userId as number;
-      const productInput = insertProductSchema.parse({
-        ...req.body,
-        sellerId: userId,
-        sustainabilityImpact: parseInt(req.body.sustainabilityImpact),
-        price: parseInt(req.body.price)
-      });
       
-      const product = await storage.createProduct(productInput);
+      // Format the data to match the database schema
+      const productData = {
+        name: req.body.name,
+        description: req.body.description,
+        price: parseInt(req.body.price),
+        image_url: req.body.imageUrl,
+        category: req.body.category,
+        sustainability_impact: parseInt(req.body.sustainabilityImpact),
+        seller_id: userId,
+        status: "available",
+        approval_status: "pending",
+        // Optional fields
+        brand: req.body.brand || null,
+        size: req.body.size || null,
+        condition: req.body.condition || null,
+        admin_comment: null
+      };
+
+      // Create the product in the database
+      const product = await storage.createProduct(productData);
       res.status(201).json(product);
     } catch (error) {
       console.error('Error in product creation:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+        return res.status(400).json({ 
+          message: "Invalid data", 
+          errors: error.errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+          }))
+        });
       }
       res.status(500).json({ message: "Server error creating product" });
     }

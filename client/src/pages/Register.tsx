@@ -61,7 +61,7 @@ export default function Register() {
         title: "Welcome to ReVogue!",
         description: "Your account has been created successfully.",
       });
-      setLocation(ROUTES.DASHBOARD);
+      setLocation(ROUTES.HOME); // Changed from ROUTES.DASHBOARD to ROUTES.HOME
     },
     onError: (error: any) => {
       toast({

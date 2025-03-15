@@ -34,6 +34,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Filter, SlidersHorizontal } from "lucide-react";
 
+// Add proper error handling in the Shop component
 const Shop = () => {
   const [, setLocation] = useLocation();
   const search = useSearch();
@@ -63,9 +64,27 @@ const Shop = () => {
   };
   
   // Fetch products with filters
-  const { data: products, isLoading } = useQuery<Product[]>({
+  const { data: products, isLoading, isError, error } = useQuery<Product[]>({
     queryKey: [`${API_ENDPOINTS.PRODUCTS.BASE}?${buildQueryString()}`],
   });
+  
+  // Handle error state
+  if (isError) {
+    return (
+      <>
+        <Navbar />
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Products</h2>
+            <p className="text-gray-600">
+              {error instanceof Error ? error.message : "There was an error loading the products. Please try again."}
+            </p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
   
   // Update URL when filters change
   useEffect(() => {
