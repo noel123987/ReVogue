@@ -118,6 +118,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // *** PRODUCT ROUTES ***
   
+  // Admin middleware
+  const ensureAdmin = async (req: Request, res: Response, next: Function) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const user = await storage.getUser(req.session.userId);
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    next();
+  };
+
+  // Get pending products (admin only)
+  app.get("/api/admin/pending-products", ensureAdmin, async (req, res) => {
+    try {
+      const products = await storage.getProducts({ approvalStatus: "pending" });
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Approve/reject product (admin only)
+  app.patch("/api/admin/products/:id/approval", ensureAdmin, async (req, res) => {
+    try {
+      const { approvalStatus, adminComment } = req.body;
+      const productId = parseInt(req.params.id);
+      
+      if (!["approved", "rejected"].includes(approvalStatus)) {
+        return res.status(400).json({ message: "Invalid approval status" });
+      }
+
+      const product = await storage.updateProduct(productId, {
+        approvalStatus,
+        adminComment,
+        status: approvalStatus === "approved" ? "available" : "pending"
+      });
+
+      res.json(product);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
   // Get all products with optional filtering
   app.get("/api/products", async (req, res) => {
     try {
@@ -137,7 +181,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (req.query.brand) filters.brand = req.query.brand as string;
       if (req.query.sellerId) filters.sellerId = parseInt(req.query.sellerId as string);
       
-      const products = await storage.getProducts(filters);
+      const products = await storage.getProducts({
+        ...filters,
+        approvalStatus: "approved",
+        status: "available"
+      });
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
