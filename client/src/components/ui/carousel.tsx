@@ -258,3 +258,88 @@ export {
   CarouselPrevious,
   CarouselNext,
 }
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const images = [
+  {
+    url: "/attached_assets/WhatsApp Image 2025-03-15 at 10.22.36_ebe0c1e7_1742018904537.jpg",
+    alt: "Sustainable Fashion 1",
+    caption: "Thrift Collection"
+  },
+  {
+    url: "/attached_assets/WhatsApp Image 2025-03-15 at 10.59.06_1f6f5edb_1742018965667.jpg",
+    alt: "Sustainable Fashion 2",
+    caption: "Rental Collection"
+  },
+  {
+    url: "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.10_849b8fb9_1742018948212.jpg",
+    alt: "Sustainable Fashion 3",
+    caption: "Upcycled Collection"
+  }
+];
+
+export function Carousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full h-[500px] overflow-hidden rounded-lg">
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={`absolute w-full h-full transition-transform duration-500 ease-in-out ${
+            index === currentIndex ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <img
+            src={image.url}
+            alt={image.alt}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-0 w-full bg-black/50 text-white p-4">
+            <p className="text-xl font-semibold">{image.caption}</p>
+          </div>
+        </div>
+      ))}
+      
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </button>
+      
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+      >
+        <ChevronRight className="h-6 w-6" />
+      </button>
+
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 rounded-full transition-colors ${
+              index === currentIndex ? 'bg-white' : 'bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
