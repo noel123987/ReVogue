@@ -57,9 +57,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   email: true,
-  fullName: true,
   role: true
-});
+}).partial({ email: true });
 
 export const insertProductSchema = createInsertSchema(products).pick({
   name: true,

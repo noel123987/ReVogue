@@ -15,6 +15,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
+import { Mail } from "lucide-react";
 import {
   Form,
   FormControl,
