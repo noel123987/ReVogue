@@ -114,20 +114,12 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {TEAM_MEMBERS.map((member, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="rounded-lg shadow-lg w-full h-64 object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 rounded-b-lg">
-                      <h4 className="font-bold">{member.name}</h4>
-                      <p className="text-sm text-gray-200">{member.title}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="relative">
+                <img
+                  src="https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?auto=format&fit=crop&w=800&q=80"
+                  alt="Team collaboration"
+                  className="rounded-lg shadow-lg"
+                />
 
                 <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-lg shadow-lg max-w-xs hidden md:block">
                   <h4 className="font-bold mb-2 text-primary">Our Impact So Far</h4>
