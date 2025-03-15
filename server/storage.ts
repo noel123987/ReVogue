@@ -45,31 +45,54 @@ export interface IStorage {
   removeFromWishlist(id: number): Promise<boolean>;
 }
 
-export class SQLiteStorage implements IStorage {
-  private db: any;
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private products: Map<number, Product>;
+  private orders: Map<number, Order>;
+  private orderItems: Map<number, OrderItem>;
+  private wishlistItems: Map<number, Wishlist>;
 
-  constructor(db: any) {
-    this.db = db;
+  private userIdCounter: number;
+  private productIdCounter: number;
+  private orderIdCounter: number;
+  private orderItemIdCounter: number;
+  private wishlistIdCounter: number;
+
+  constructor() {
+    this.users = new Map();
+    this.products = new Map();
+    this.orders = new Map();
+    this.orderItems = new Map();
+    this.wishlistItems = new Map();
+
+    this.userIdCounter = 1;
+    this.productIdCounter = 1;
+    this.orderIdCounter = 1;
+    this.orderItemIdCounter = 1;
+    this.wishlistIdCounter = 1;
+
+    // Add sample data
+    this.initSampleData();
   }
 
   // User operations
   async getUser(id: number): Promise<User | undefined> {
-    const result = await this.db.select().from(users).where(eq(users.id, id));
-    return result[0];
+    return this.users.get(id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const result = await this.db.select().from(users).where(eq(users.username, username));
-    return result[0];
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username
+    );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.userIdCounter++;
+    const now = new Date();
     const hashedPassword = await hash(insertUser.password, 10);
-    const user = await this.db.insert(users).values({
-      ...insertUser,
-      password: hashedPassword,
-    }).returning();
-    return user[0];
+    const user: User = { ...insertUser, password: hashedPassword, id, createdAt: now };
+    this.users.set(id, user);
+    return user;
   }
   async validatePassword(user: User, password: string): Promise<boolean> {
     return await compare(password, user.password);
