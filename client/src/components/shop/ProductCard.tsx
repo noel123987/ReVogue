@@ -45,8 +45,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-      <Link href={ROUTES.PRODUCT_DETAIL(product.id)}>
-        <a className="block">
+      <Link href={ROUTES.PRODUCT_DETAIL(product.id)} className="block">
           <div className="relative overflow-hidden pb-[125%]">
             <img 
               src={getOptimizedImageUrl(product.imageUrl)}
@@ -87,8 +86,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </div>
             </div>
           </div>
-        </a>
-      </Link>
+        </Link>
     </div>
   );
 };
