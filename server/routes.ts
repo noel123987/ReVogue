@@ -218,16 +218,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.session.userId as number;
       const productInput = insertProductSchema.parse({
         ...req.body,
-        sellerId: userId
+        sellerId: userId,
+        sustainabilityImpact: parseInt(req.body.sustainabilityImpact),
+        price: parseInt(req.body.price)
       });
       
       const product = await storage.createProduct(productInput);
       res.status(201).json(product);
     } catch (error) {
+      console.error('Error in product creation:', error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
       }
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "Server error creating product" });
     }
   });
 

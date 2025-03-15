@@ -210,3 +210,24 @@ class SupabaseStorage implements IStorage {
 }
 
 export const storage = new SupabaseStorage();
+import { db } from './db';
+import { products } from '@shared/schema';
+import type { InsertProduct } from '@shared/schema';
+
+export async function createProduct(productData: InsertProduct) {
+  try {
+    const result = await db.insert(products)
+      .values({
+        ...productData,
+        status: 'pending',
+        approvalStatus: 'pending',
+        createdAt: new Date()
+      })
+      .returning();
+    
+    return result[0];
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+}
