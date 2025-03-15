@@ -165,9 +165,9 @@ export const COLORS = {
     dark: '#52B788',
   },
   accent: {
-    DEFAULT: '#DE5B49',
-    light: '#E67C6E',
-    dark: '#C7422F',
+    DEFAULT: '#2D6A4F',
+    light: '#3B8467',
+    dark: '#1E4535',
   },
   neutral: {
     lightest: '#F8F9FA',

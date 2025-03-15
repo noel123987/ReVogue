@@ -16,7 +16,7 @@ const Footer = () => {
             <Link href={ROUTES.HOME}>
               <a className="inline-block mb-6">
                 <span className="text-white font-poppins font-bold text-2xl">
-                  Re<span className="text-accent">Vogue</span>
+                  Re<span className="text-primary">Vogue</span>
                 </span>
               </a>
             </Link>
