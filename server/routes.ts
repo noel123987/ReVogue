@@ -116,50 +116,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin middleware
-  const ensureAdmin = async (req: Request, res: Response, next: Function) => {
-    if (!req.session || !req.session.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const user = await storage.getUser(req.session.userId);
-    if (!user || user.role !== "admin") {
-      return res.status(403).json({ message: "Admin access required" });
-    }
-    next();
-  };
-
-  // *** ADMIN ROUTES ***
-  
-  // Get pending products
-  app.get("/api/admin/pending-products", ensureAdmin, async (req, res) => {
-    try {
-      const products = await storage.getProducts({ approvalStatus: "pending" });
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-
-  // Approve/reject product
-  app.patch("/api/admin/products/:id/approval", ensureAdmin, async (req, res) => {
-    try {
-      const { status, comment } = req.body;
-      if (!["approved", "rejected"].includes(status)) {
-        return res.status(400).json({ message: "Invalid approval status" });
-      }
-
-      const productId = parseInt(req.params.id);
-      const product = await storage.updateProduct(productId, {
-        approvalStatus: status,
-        adminComment: comment
-      });
-
-      res.json(product);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-
   // *** PRODUCT ROUTES ***
   
   // Get all products with optional filtering
@@ -172,10 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         size?: string;
         brand?: string;
         sellerId?: number;
-        approvalStatus?: string;
-      } = {
-        approvalStatus: "approved" // Only show approved products by default
-      };
+      } = {};
       
       if (req.query.category) filters.category = req.query.category as string;
       if (req.query.maxPrice) filters.maxPrice = parseInt(req.query.maxPrice as string);
