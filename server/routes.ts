@@ -2,6 +2,8 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
+import session from "express-session";
+import { v4 as uuidv4 } from "uuid";
 import { 
   insertUserSchema, 
   insertProductSchema, 
@@ -11,6 +13,16 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session middleware
+  app.use(session({
+    secret: process.env.SESSION_SECRET || uuidv4(),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
   // Middleware to ensure user is authenticated
   const ensureAuthenticated = (req: Request, res: Response, next: Function) => {
     if (req.session && req.session.userId) {

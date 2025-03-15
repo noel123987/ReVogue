@@ -1,5 +1,8 @@
+import { eq } from "drizzle-orm";
+import { db } from "./db";
+import { InsertUser, User, users } from "@shared/schema";
+import { hash, compare } from "bcrypt";
 import {
-  users, type User, type InsertUser,
   products, type Product, type InsertProduct,
   orders, type Order, type InsertOrder,
   orderItems, type OrderItem, type InsertOrderItem,
@@ -11,12 +14,13 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+  validatePassword(user: User, password: string): Promise<boolean>;
+
   // Product operations
   getProduct(id: number): Promise<Product | undefined>;
-  getProducts(options?: { 
-    category?: string; 
-    maxPrice?: number; 
+  getProducts(options?: {
+    category?: string;
+    maxPrice?: number;
     minPrice?: number;
     size?: string;
     brand?: string;
@@ -24,17 +28,17 @@ export interface IStorage {
   }): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: number, data: Partial<InsertProduct>): Promise<Product | undefined>;
-  
+
   // Order operations
   getOrder(id: number): Promise<Order | undefined>;
   getOrdersByUserId(userId: number): Promise<Order[]>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
-  
+
   // Order item operations
   getOrderItems(orderId: number): Promise<OrderItem[]>;
   createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
-  
+
   // Wishlist operations
   getWishlistByUserId(userId: number): Promise<Wishlist[]>;
   addToWishlist(wishlistItem: InsertWishlist): Promise<Wishlist>;
@@ -47,7 +51,7 @@ export class MemStorage implements IStorage {
   private orders: Map<number, Order>;
   private orderItems: Map<number, OrderItem>;
   private wishlistItems: Map<number, Wishlist>;
-  
+
   private userIdCounter: number;
   private productIdCounter: number;
   private orderIdCounter: number;
@@ -60,13 +64,13 @@ export class MemStorage implements IStorage {
     this.orders = new Map();
     this.orderItems = new Map();
     this.wishlistItems = new Map();
-    
+
     this.userIdCounter = 1;
     this.productIdCounter = 1;
     this.orderIdCounter = 1;
     this.orderItemIdCounter = 1;
     this.wishlistIdCounter = 1;
-    
+
     // Add sample data
     this.initSampleData();
   }
@@ -89,22 +93,25 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
+  async validatePassword(user: User, password: string): Promise<boolean> {
+    return compare(password, user.password);
+  }
 
   // Product operations
   async getProduct(id: number): Promise<Product | undefined> {
     return this.products.get(id);
   }
 
-  async getProducts(options?: { 
-    category?: string; 
-    maxPrice?: number; 
+  async getProducts(options?: {
+    category?: string;
+    maxPrice?: number;
     minPrice?: number;
     size?: string;
     brand?: string;
     sellerId?: number;
   }): Promise<Product[]> {
     let products = Array.from(this.products.values());
-    
+
     if (options) {
       if (options.category) {
         products = products.filter(p => p.category === options.category);
@@ -125,7 +132,7 @@ export class MemStorage implements IStorage {
         products = products.filter(p => p.sellerId === options.sellerId);
       }
     }
-    
+
     return products;
   }
 
@@ -140,7 +147,7 @@ export class MemStorage implements IStorage {
   async updateProduct(id: number, data: Partial<InsertProduct>): Promise<Product | undefined> {
     const product = this.products.get(id);
     if (!product) return undefined;
-    
+
     const updatedProduct = { ...product, ...data };
     this.products.set(id, updatedProduct);
     return updatedProduct;
@@ -166,7 +173,7 @@ export class MemStorage implements IStorage {
   async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
     const order = this.orders.get(id);
     if (!order) return undefined;
-    
+
     const updatedOrder = { ...order, status };
     this.orders.set(id, updatedOrder);
     return updatedOrder;
