@@ -33,4 +33,8 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
+  // Find the server configuration section and update the port:
+  server: {
+    port: 5000,
+  }
 });
