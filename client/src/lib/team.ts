@@ -1,36 +1,3 @@
-
-export const TEAM_MEMBERS = [
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 09.58.37_3424f925_1742016736612.jpg",
-    name: "Fashion Expert",
-    title: "Style Consultant"
-  },
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 10.22.36_4de1360e_1742016643690.jpg",
-    name: "Sustainability Lead",
-    title: "Environmental Specialist"
-  },
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 10.59.06_6da3b38a_1742016596966.jpg",
-    name: "Community Manager",
-    title: "User Experience"
-  },
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 11.02.57_43d3d0c8_1742016830801.jpg",
-    name: "Tech Lead",
-    title: "Platform Development"
-  },
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.10_951913ef_1742017106025.jpg",
-    name: "Product Designer",
-    title: "UX/UI Design"
-  },
-  {
-    image: "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.25_aa79f51c_1742017123485.jpg",
-    name: "Marketing Lead",
-    title: "Brand Strategy"
-  }
-];
 export const TEAM_MEMBERS = [
   {
     name: "Maya Johnson",
@@ -40,7 +7,7 @@ export const TEAM_MEMBERS = [
   },
   {
     name: "David Chen",
-    role: "Chief Technology Officer",
+    role: "Chief Technology Officer", 
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
     bio: "AI expert with a background in sustainable engineering. David leads our technology innovation and circular fashion algorithms."
   },
