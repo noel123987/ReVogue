@@ -38,8 +38,9 @@ const loginSchema = z.object({
 });
 
 const registerSchema = z.object({
-  username: z.string().min(1, { message: "Username is required" }).min(3, { message: "Username must be at least 3 characters" }),
-  password: z.string().min(1, { message: "Password is required" }).min(6, { message: "Password must be at least 6 characters" }),
+  username: z.string().min(3, { message: "Username must be at least 3 characters" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().email({ message: "Please enter a valid email" }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -65,6 +66,7 @@ export default function Auth() {
     defaultValues: {
       username: "",
       password: "",
+      email: "",
     },
   });
 
@@ -203,6 +205,28 @@ export default function Auth() {
                               <div className="relative">
                                 <User className="absolute left-3 top-3 h-4 w-4 text-neutral-dark" />
                                 <Input placeholder="Choose a username" className="pl-10" {...field} />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={registerForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Mail className="absolute left-3 top-3 h-4 w-4 text-neutral-dark" />
+                                <Input
+                                  type="email"
+                                  placeholder="Enter your email"
+                                  className="pl-10"
+                                  {...field}
+                                />
                               </div>
                             </FormControl>
                             <FormMessage />
