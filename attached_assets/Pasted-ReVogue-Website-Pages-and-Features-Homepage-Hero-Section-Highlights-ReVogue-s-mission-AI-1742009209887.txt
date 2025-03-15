@@ -1,0 +1,55 @@
+ReVogue Website Pages and Features 🌿
+
+Homepage 🌟
+
+Hero Section: Highlights ReVogue’s mission — "AI-powered circular fashion for a sustainable future."
+Call to Action (CTA): "Explore Thrift," "Rent Fashion," and "Upcycle & Resell" buttons.
+Impact Stats: Show figures like "92M tons of textile waste reduced" and "X carbon emissions saved."
+Featured Collections: Display trending thrifted clothes, rental fashion, and upcycled items.
+Shop Page 🛍️
+
+Categories: Thrifted Clothing, Fashion Rentals, Upcycled Fashion.
+Filters: Price range, size, color, brand, and sustainability tags.
+AI-Personalized Recommendations: Uses machine learning to suggest items based on user preferences and browsing history.
+Product Detail Page 👗
+
+Item Description: Shows high-quality images, fabric details, sizing, and seller info.
+Sustainability Impact: Displays estimated carbon footprint saved by buying pre-loved items.
+Buy, Rent, or Upcycle Options: Allows users to directly purchase, rent for events, or submit a custom upcycling request.
+Reviews & Ratings: User feedback on items and sellers.
+Sell/Upload Page 📸
+
+Simple Form: Users can upload photos, add descriptions, set prices, and choose categories (thrift, rent, or upcycle).
+AI Tagging: Auto-suggests tags (brand, material, style) for faster listing.
+Price Estimator: ReVogue’s AI suggests competitive yet fair prices based on item condition and demand.
+Dashboard 🏡
+
+For Buyers:
+Order history
+Saved items (wishlist)
+Personalized recommendations
+For Sellers:
+Sales analytics (revenue, sold items)
+Listings management (active, pending, and sold items)
+Upcycling Requests: Track custom design requests and collaborations with tailors.
+Sustainability Hub 🌎
+
+Blog: Articles on fashion waste, sustainable practices, and circular economy insights.
+Carbon Tracker: Lets users calculate their carbon footprint savings by choosing second-hand over new clothes.
+Community Stories: Showcases users’ sustainable fashion journeys and successful upcycling projects.
+About Us Page 📚
+
+Mission & Vision: Details ReVogue’s goals and alignment with SDG 12 (Responsible Consumption & Production).
+Team: Introduces the core team and their passion for eco-friendly fashion.
+Partners: Lists collaborations with sustainable fashion brands and NGOs.
+Contact Page 📞
+
+Support Form: For general inquiries, seller support, and upcycling partnerships.
+Live Chat: Instant support for buyers and sellers.
+Social Links: Connect to ReVogue’s Instagram, Pinterest, and LinkedIn.
+Login/Signup Page 🔒
+
+User Roles: Options for "Buyer," "Seller," or "Upcycler."
+Social Login: Quick access via Google, Apple, or Facebook.
+Onboarding: New users get a sustainability quiz to fine-tune AI recommendations.
+Would you like to dive deeper into any specific page, like how the AI personalization works or how the upcycling flow is structured? Let’s build something amazing! ✨
