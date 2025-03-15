@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,7 +37,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const [, setLocation] = useLocation();
+  const [_, navigate] = useLocation();
   const { toast } = useToast();
 
   const form = useForm<LoginFormValues>({
@@ -59,7 +58,7 @@ export default function Login() {
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
-      setLocation(ROUTES.DASHBOARD);
+      navigate(ROUTES.DASHBOARD); // Redirect to dashboard after successful login
     },
     onError: (error: any) => {
       toast({
