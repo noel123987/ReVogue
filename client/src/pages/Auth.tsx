@@ -85,8 +85,14 @@ const Auth = () => {
 
   // Login mutation
   const loginMutation = useMutation({
-    mutationFn: (values: LoginFormValues) => {
-      return apiRequest("POST", API_ENDPOINTS.AUTH.LOGIN, values);
+    mutationFn: async (values: LoginFormValues) => {
+      try {
+        const response = await apiRequest("POST", API_ENDPOINTS.AUTH.LOGIN, values);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new Error('Login failed');
+      }
     },
     onSuccess: () => {
       toast({
@@ -95,7 +101,7 @@ const Auth = () => {
       });
       navigate(ROUTES.HOME);
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Login Failed",
         description: "Invalid username or password. Please try again.",
@@ -106,26 +112,33 @@ const Auth = () => {
 
   // Register mutation
   const registerMutation = useMutation({
-    mutationFn: (values: RegisterFormValues) => {
-      return apiRequest("POST", API_ENDPOINTS.AUTH.REGISTER, values);
+    mutationFn: async (values: RegisterFormValues) => {
+      try {
+        const response = await apiRequest("POST", API_ENDPOINTS.AUTH.REGISTER, values);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new Error('Registration failed');
+      }
     },
     onSuccess: () => {
       toast({
         title: "Registration Successful",
         description: "Welcome to ReVogue! Your account has been created.",
       });
-      navigate(ROUTES.HOME);
+      // Log in the user after successful registration
+      const { username, password } = registerForm.getValues();
+      loginMutation.mutate({ username, password });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Registration Failed",
-        description: "There was an error creating your account. The username may already be taken.",
+        description: "Username or email already exists. Please try different credentials.",
         variant: "destructive",
       });
     },
   });
 
-  // Form submit handlers
   const onLoginSubmit = (values: LoginFormValues) => {
     loginMutation.mutate(values);
   };
