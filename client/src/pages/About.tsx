@@ -8,28 +8,40 @@ const About = () => {
   // Team members
   const teamMembers = [
     {
-      name: "Maya Johnson",
+      name: "Ann Maria Tomichan",
       role: "Founder & CEO",
       image: "/src/assets/team/WhatsApp Image 2025-03-15 at 09.58.37_e2c3caff_1742019047846.jpg",
-      bio: "Former fashion executive with a passion for sustainability and technology. Maya founded ReVogue to transform how we consume fashion."
+      bio: "Passionate about merging fashion and sustainability, Ann Maria founded ReVogue to revolutionize the way we consume and recycle clothing. With an interest in fashion entrepreneurship, she leads the vision for a circular and ethical fashion ecosystem."
     },
     {
-      name: "David Chen",
+      name: "Royal Kuriakose",
       role: "Chief Technology Officer", 
-      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 10.22.36_ebe0c1e7_1742018904537.jpg",
-      bio: "AI expert with a background in sustainable engineering. David leads our technology innovation and circular fashion algorithms."
+      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 11.08.10_849b8fb9_1742018948212.jpg",
+      bio: "A tech innovator specializing in AI and blockchain, Royal is the mastermind behind ReVogue’s smart fashion marketplace. He ensures seamless AI-driven matching, real-time tracking, and secure transactions to power sustainable fashion."
     },
     {
-      name: "Zara Patel",
+      name: "Sanjana S Nair",
       role: "Head of Sustainability",
-      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 10.59.06_1f6f5edb_1742018965667.jpg", 
-      bio: "Environmental scientist and former UN climate advisor. Zara ensures our operations align with the highest sustainability standards."
+      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 10.22.36_ebe0c1e7_1742018904537.jpg", 
+      bio: "With a deep interest in ethical fashion and environmental conservation, Sanjana ensures that ReVogue’s operations align with global sustainability goals, bridging the gap between technology and responsible fashion."
     },
     {
-      name: "Marcus Williams",
+      name: "Noel Benny",
       role: "Creative Director",
       image: "/src/assets/team/WhatsApp Image 2025-03-15 at 11.08.25_264987fb_1742018887981.jpg",
-      bio: "Fashion designer with a focus on upcycling and sustainable design. Marcus oversees our creative vision and upcycling partnerships."
+      bio: "A visionary fashion designer with expertise in upcycling, Noel curates unique, eco-conscious designs for ReVogue. He collaborates with sustainable brands and artisans to bring innovative, repurposed fashion to life."
+    },
+    {
+      name: "Sara Sam Chacko",
+      role: "Head of Retail & Offline Operations",
+      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 10.59.06_1f6f5edb_1742018965667.jpg", 
+      bio: "Passionate about merging physical and digital retail, Sara ensures that ReVogue’s offline thrift and upcycling stores offer an immersive shopping experience. She curates thrift collections and organizes pop-up events to build community engagement."
+    },
+    {
+      name: " Sam Ben",
+      role: "Marketing & Brand Strategist",
+      image: "/src/assets/team/WhatsApp Image 2025-03-15 at 11.02.57_9167f998_1742018981064.jpg",
+      bio: "A digital marketing expert, Sam spearheads ReVogue’s brand storytelling, influencer partnerships, and outreach campaigns. He ensures that sustainable fashion becomes a trend-driven movement among Gen Z and millennials."
     }
   ];
 
@@ -459,4 +471,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default About;
