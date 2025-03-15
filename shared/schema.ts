@@ -25,6 +25,8 @@ export const products = pgTable("products", {
   sustainabilityImpact: integer("sustainability_impact").notNull(), // CO2 saved in grams
   sellerId: integer("seller_id").notNull(),
   status: text("status").default("available").notNull(), // "available", "sold", "rented"
+  approvalStatus: text("approval_status").default("pending").notNull(), // "pending", "approved", "rejected"
+  adminComment: text("admin_comment"),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
