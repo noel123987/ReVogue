@@ -4,10 +4,15 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { ROUTES } from "@/lib/constants";
 import { ShieldCheck, Award, Sparkles, Heart, User, Clock, ArrowRight } from "lucide-react";
 
-import { TEAM_MEMBERS } from "@/lib/team";
-
 const About = () => {
-  const teamMembers = TEAM_MEMBERS;
+  // Team members
+  const teamMembers = [
+    {
+      name: "Maya Johnson",
+      role: "Founder & CEO",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+      bio: "Former fashion executive with a passion for sustainability and technology. Maya founded ReVogue to transform how we consume fashion."
+    },
     {
       name: "David Chen",
       role: "Chief Technology Officer",
