@@ -10,25 +10,25 @@ const About = () => {
     {
       name: "Maya Johnson",
       role: "Founder & CEO",
-      image: "/src/assets/images/profile-1.jpg",
+      image: "/attached_assets/WhatsApp Image 2025-03-15 at 09.58.37_e2c3caff_1742019047846.jpg",
       bio: "Former fashion executive with a passion for sustainability and technology. Maya founded ReVogue to transform how we consume fashion."
     },
     {
       name: "David Chen",
       role: "Chief Technology Officer", 
-      image: "/src/assets/images/profile-2.jpg",
+      image: "/attached_assets/WhatsApp Image 2025-03-15 at 10.22.36_ebe0c1e7_1742018904537.jpg",
       bio: "AI expert with a background in sustainable engineering. David leads our technology innovation and circular fashion algorithms."
     },
     {
       name: "Zara Patel",
       role: "Head of Sustainability",
-      image: "/src/assets/images/profile-3.jpg", 
+      image: "/attached_assets/WhatsApp Image 2025-03-15 at 10.59.06_1f6f5edb_1742018965667.jpg", 
       bio: "Environmental scientist and former UN climate advisor. Zara ensures our operations align with the highest sustainability standards."
     },
     {
       name: "Marcus Williams",
       role: "Creative Director",
-      image: "/src/assets/images/profile-4.jpg",
+      image: "/attached_assets/WhatsApp Image 2025-03-15 at 11.08.25_264987fb_1742018887981.jpg",
       bio: "Fashion designer with a focus on upcycling and sustainable design. Marcus oversees our creative vision and upcycling partnerships."
     }
   ];
