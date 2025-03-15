@@ -52,8 +52,10 @@ export default function Register() {
   });
 
   const registerMutation = useMutation({
-    mutationFn: (data: RegisterFormValues) =>
-      apiRequest.post("/api/auth/register", data),
+    mutationFn: async (data: RegisterFormValues) => {
+      const response = await apiRequest.post("/api/auth/register", data);
+      return response.data;
+    },
     onSuccess: () => {
       toast({
         title: "Welcome to ReVogue!",
