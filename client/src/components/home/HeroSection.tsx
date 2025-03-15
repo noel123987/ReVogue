@@ -10,30 +10,25 @@ const HeroSection = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white font-poppins leading-tight mb-6">
             AI-powered circular fashion for a sustainable future
           </h1>
-          <p className="text-white text-lg md:text-xl opacity-90 mb-8">
-            Join the movement to reduce fashion waste through thrifting, renting, and upcycling your wardrobe.
+          <p className="text-primary text-lg md:text-xl font-medium mb-8">
+            Ready to join the circular fashion revolution?
+            Create your account today and discover a new way to enjoy fashion that's kinder to the planet and your wallet.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
             <ButtonLink 
-              href={`${ROUTES.SHOP}?category=thrift`} 
+              href={`${ROUTES.AUTH}/signup`}
               className="bg-white hover:bg-neutral-lightest text-primary font-medium"
             >
-              Explore Thrift
+              Sign Up Now
             </ButtonLink>
             <ButtonLink 
-              href={`${ROUTES.SHOP}?category=rental`}
+              href={ROUTES.ABOUT}
               className="bg-secondary hover:bg-secondary-light text-white font-medium"
             >
-              Rent Fashion
-            </ButtonLink>
-            <ButtonLink 
-              href={`${ROUTES.SHOP}?category=upcycled`}
-              className="bg-accent hover:bg-accent-light text-white font-medium"
-            >
-              Upcycle & Resell
+              Learn More
             </ButtonLink>
           </div>
-          
+
           {/* Impact Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 text-white">
             {IMPACT_STATS.map((stat, index) => (
